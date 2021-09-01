@@ -3,7 +3,7 @@ package org.vincentyeh.http_util.net.framework.downloader;
 import org.vincentyeh.http_util.net.framework.connection.HttpConnection;
 import org.vincentyeh.http_util.net.framework.downloader.exception.NoSpecifyNetUtil;
 import org.vincentyeh.http_util.net.framework.downloader.listener.URLDownloaderListener;
-import org.vincentyeh.http_util.net.framework.utils.HttpUtil;
+import org.vincentyeh.http_util.net.framework.utils.HttpClientUtil;
 import org.vincentyeh.http_util.net.framework.utils.LengthNotFound;
 
 import java.io.*;
@@ -16,9 +16,9 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
-    private static HttpUtil httpUtil;
+    private static HttpClientUtil httpUtil;
 
-    public static void warpHttpUtil(HttpUtil util) {
+    public static void warpHttpClientUtil(HttpClientUtil util) {
         httpUtil = util;
     }
 
@@ -76,6 +76,10 @@ public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
         } finally {
             connection.disconnect();
         }
+    }
+
+    public final RESULT get() throws Exception{
+        return call();
     }
 
     public BigDecimal getTotalBytes() {

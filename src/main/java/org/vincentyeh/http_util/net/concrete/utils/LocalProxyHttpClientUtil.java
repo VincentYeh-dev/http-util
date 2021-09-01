@@ -1,9 +1,10 @@
 package org.vincentyeh.http_util.net.concrete.utils;
+
 import org.vincentyeh.http_util.net.concrete.connection.HttpConnectionAdaptor;
 import org.vincentyeh.http_util.net.concrete.connection.HttpsConnectionAdaptor;
 import org.vincentyeh.http_util.net.framework.connection.HttpConnection;
 import org.vincentyeh.http_util.net.framework.connection.HttpsConnection;
-import org.vincentyeh.http_util.net.framework.utils.HttpUtil;
+import org.vincentyeh.http_util.net.framework.utils.HttpClientUtil;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -13,19 +14,20 @@ import java.io.IOException;
 import java.net.*;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.util.Map;
 
-public class LocalProxyHttpUtil implements HttpUtil {
+public class LocalProxyHttpClientUtil implements HttpClientUtil {
 
     @Override
     public HttpConnection openConnection(URL url, Map<String, String> headers, int timeoutMillisecond) throws IOException, NoSuchAlgorithmException, KeyManagementException {
-        return openWithProxyConnection(url,headers,timeoutMillisecond,new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 8080)));
+        return openWithProxyConnection(url, headers, timeoutMillisecond, new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 8080)));
     }
 
     @Override
     public HttpConnection openWithProxyConnection(URL url, Map<String, String> headers, int timeoutMillisecond, Proxy proxy) throws IOException, NoSuchAlgorithmException, KeyManagementException {
         URLConnection urlConnection = url.openConnection(proxy);
-        return handleHttpConnection(urlConnection,headers,timeoutMillisecond);
+        return handleHttpConnection(urlConnection, headers, timeoutMillisecond);
     }
 
 
@@ -38,7 +40,7 @@ public class LocalProxyHttpUtil implements HttpUtil {
 
                 // Create a trust manager that does not validate certificate chains
                 sc.init(null, trustAllCerts, new java.security.SecureRandom());
-                ((HttpsConnection)connection).setSSLContext(sc);
+                ((HttpsConnection) connection).setSSLContext(sc);
 
             } else {
                 connection = new HttpConnectionAdaptor((HttpURLConnection) urlConnection);
@@ -62,12 +64,10 @@ public class LocalProxyHttpUtil implements HttpUtil {
                     return null;
                 }
 
-                public void checkClientTrusted(
-                        java.security.cert.X509Certificate[] certs, String authType) {
+                public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType) {
                 }
 
-                public void checkServerTrusted(
-                        java.security.cert.X509Certificate[] certs, String authType) {
+                public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType) {
                 }
             }
     };
