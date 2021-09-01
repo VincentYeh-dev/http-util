@@ -1,6 +1,7 @@
 package org.vincentyeh.http_util.net.concrete.connection;
 
 import org.vincentyeh.http_util.net.framework.connection.HttpConnection;
+import org.vincentyeh.http_util.net.framework.connection.header.Headers;
 import org.vincentyeh.http_util.net.framework.utils.LengthNotFound;
 
 import java.io.IOException;
@@ -39,10 +40,10 @@ public class HttpConnectionAdaptor implements HttpConnection {
     }
 
     @Override
-    public void setHeader(Map<String, String> headers) {
+    public void setHeader(Headers headers) {
         if (headers != null)
-            for (Map.Entry<String, String> entry : headers.entrySet())
-                connection.addRequestProperty(entry.getKey(), entry.getValue());
+            for (Map.Entry<String, String> entry : headers.getMap().entrySet())
+                connection.setRequestProperty(entry.getKey(), entry.getValue());
     }
 
     @Override

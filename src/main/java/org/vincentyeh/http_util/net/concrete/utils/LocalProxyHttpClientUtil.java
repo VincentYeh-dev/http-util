@@ -4,6 +4,7 @@ import org.vincentyeh.http_util.net.concrete.connection.HttpConnectionAdaptor;
 import org.vincentyeh.http_util.net.concrete.connection.HttpsConnectionAdaptor;
 import org.vincentyeh.http_util.net.framework.connection.HttpConnection;
 import org.vincentyeh.http_util.net.framework.connection.HttpsConnection;
+import org.vincentyeh.http_util.net.framework.connection.header.Headers;
 import org.vincentyeh.http_util.net.framework.utils.HttpClientUtil;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -14,24 +15,22 @@ import java.io.IOException;
 import java.net.*;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.util.Map;
 
 public class LocalProxyHttpClientUtil implements HttpClientUtil {
 
     @Override
-    public HttpConnection openConnection(URL url, Map<String, String> headers, int timeoutMillisecond) throws IOException, NoSuchAlgorithmException, KeyManagementException {
+    public HttpConnection openConnection(URL url, Headers headers, int timeoutMillisecond) throws IOException, NoSuchAlgorithmException, KeyManagementException {
         return openWithProxyConnection(url, headers, timeoutMillisecond, new Proxy(Proxy.Type.HTTP, new InetSocketAddress("127.0.0.1", 8080)));
     }
 
     @Override
-    public HttpConnection openWithProxyConnection(URL url, Map<String, String> headers, int timeoutMillisecond, Proxy proxy) throws IOException, NoSuchAlgorithmException, KeyManagementException {
+    public HttpConnection openWithProxyConnection(URL url, Headers headers, int timeoutMillisecond, Proxy proxy) throws IOException, NoSuchAlgorithmException, KeyManagementException {
         URLConnection urlConnection = url.openConnection(proxy);
         return handleHttpConnection(urlConnection, headers, timeoutMillisecond);
     }
 
 
-    private HttpConnection handleHttpConnection(URLConnection urlConnection, Map<String, String> headers, int timeoutMillisecond) throws NoSuchAlgorithmException, KeyManagementException {
+    private HttpConnection handleHttpConnection(URLConnection urlConnection, Headers headers, int timeoutMillisecond) throws NoSuchAlgorithmException, KeyManagementException {
         if (urlConnection instanceof HttpURLConnection) {
             HttpConnection connection;
             if (urlConnection instanceof HttpsURLConnection) {

@@ -1,6 +1,7 @@
 package org.vincentyeh.http_util.net.framework.downloader;
 
 import org.vincentyeh.http_util.net.framework.connection.HttpConnection;
+import org.vincentyeh.http_util.net.framework.connection.header.Headers;
 import org.vincentyeh.http_util.net.framework.downloader.exception.NoSpecifyNetUtil;
 import org.vincentyeh.http_util.net.framework.downloader.listener.URLDownloaderListener;
 import org.vincentyeh.http_util.net.framework.utils.HttpClientUtil;
@@ -11,12 +12,11 @@ import java.math.BigDecimal;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Callable;
 
 public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
     private static HttpClientUtil httpUtil;
+
 
     public static void warpHttpClientUtil(HttpClientUtil util) {
         httpUtil = util;
@@ -24,7 +24,7 @@ public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
 
     private URLDownloaderListener listener;
     protected final URL url;
-    private final Map<String, String> headers;
+    private final Headers headers;
     private final int timeoutMillis;
     private BigDecimal totalBytes = new BigDecimal(0);
 
@@ -34,12 +34,12 @@ public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
 
     public abstract BigDecimal getDownloadedBytes();
 
-    public URLDownloader(URL url, int timeoutMillis) {
+    public URLDownloader(URL url, int timeoutMillis, Headers headers) {
         this.url = url;
         this.timeoutMillis = timeoutMillis;
-        this.headers = new HashMap<>();
-        headers.put("User-Agent",
-                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36");
+        this.headers =headers;
+//        headers.put("User-Agent",
+//                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36");
     }
 
 
@@ -78,7 +78,7 @@ public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
         }
     }
 
-    public final RESULT get() throws Exception{
+    public final RESULT get() throws Exception {
         return call();
     }
 

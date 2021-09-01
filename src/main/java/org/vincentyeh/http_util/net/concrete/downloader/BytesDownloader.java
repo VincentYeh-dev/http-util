@@ -1,5 +1,6 @@
 package org.vincentyeh.http_util.net.concrete.downloader;
 
+import org.vincentyeh.http_util.net.framework.connection.header.Headers;
 import org.vincentyeh.http_util.net.framework.downloader.URLDownloader;
 import org.vincentyeh.http_util.net.framework.downloader.listener.URLDownloaderListener;
 
@@ -12,8 +13,8 @@ import java.util.List;
 public class BytesDownloader extends URLDownloader<List<Byte>> {
     private List<Byte> bytes;
 
-    public BytesDownloader(URL url,int timeoutMillis) {
-        super(url,timeoutMillis);
+    public BytesDownloader(URL url, int timeoutMillis, Headers headers) {
+        super(url, timeoutMillis, headers);
     }
 
     @Override
