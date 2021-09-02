@@ -58,7 +58,7 @@ public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
         if (listener != null)
             listener.start(this);
 
-        HttpConnection connection = httpUtil.openConnection(url, headers, timeoutMillis);
+        HttpConnection connection = httpUtil.get(url,headers, timeoutMillis,null);
 
         try {
             totalBytes = connection.getLength();

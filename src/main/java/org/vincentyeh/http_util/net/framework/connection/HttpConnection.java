@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
+import java.net.ProtocolException;
 
 public interface HttpConnection {
 
@@ -22,7 +23,9 @@ public interface HttpConnection {
 
     void setUseCaches(boolean b);
 
-    void setDoInput(boolean b);
+    void setLength(long length);
+
+    void setRequestMethod(String method) throws ProtocolException;
 
     void disconnect();
 

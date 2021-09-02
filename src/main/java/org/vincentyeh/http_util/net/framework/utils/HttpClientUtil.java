@@ -8,6 +8,8 @@ import java.net.Proxy;
 import java.net.URL;
 
 public interface HttpClientUtil {
-    HttpConnection openConnection(URL url, Headers headers, int timeoutMillisecond) throws Exception;
-    HttpConnection openWithProxyConnection(URL url, Headers headers, int timeoutMillisecond, Proxy proxy) throws Exception;
+    HttpConnection get(URL url, Headers headers, int timeoutMillisecond, Proxy proxy) throws Exception;
+
+    HttpConnection post(URL url, Headers headers, int timeoutMillisecond,byte[] body, Proxy proxy) throws Exception;
+
 }

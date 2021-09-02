@@ -55,6 +55,7 @@ public class Headers {
         Base64.Encoder encoder=Base64.getEncoder();
         String encoded=encoder.encodeToString(credentials.getBytes(StandardCharsets.UTF_8));
         map.put("Authorization",format("%s %s",type,encoded));
+
     }
 
     public Map<String, String> getMap() {

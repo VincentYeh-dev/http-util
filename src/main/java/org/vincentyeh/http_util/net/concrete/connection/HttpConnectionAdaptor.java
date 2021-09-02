@@ -9,12 +9,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.util.Map;
 
 public class HttpConnectionAdaptor implements HttpConnection {
     private final HttpURLConnection connection;
 
-    public HttpConnectionAdaptor(HttpURLConnection connection) {
+    public HttpConnectionAdaptor(HttpURLConnection connection,boolean doInput,boolean doOutput) {
+        connection.setDoInput(doInput);
+        connection.setDoOutput(doOutput);
         this.connection = connection;
     }
 
@@ -52,8 +55,14 @@ public class HttpConnectionAdaptor implements HttpConnection {
     }
 
     @Override
-    public void setDoInput(boolean b) {
-        connection.setDoInput(b);
+    public void setLength(long length) {
+        connection.setFixedLengthStreamingMode(length);
+    }
+
+
+    @Override
+    public void setRequestMethod(String method) throws ProtocolException {
+        connection.setRequestMethod(method);
     }
 
     @Override
