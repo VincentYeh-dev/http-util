@@ -35,17 +35,22 @@ public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
 
     public abstract BigDecimal getDownloadedBytes();
 
+    protected abstract void resetSubclass();
+
+    private void reset() {
+        totalBytes = new BigDecimal(0);
+        resetSubclass();
+    }
+
     public URLDownloader(URL url, int timeoutMillis, Headers headers) {
         this.url = url;
         this.timeoutMillis = timeoutMillis;
-        this.headers =headers;
-//        headers.put("User-Agent",
-//                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36");
+        this.headers = headers;
     }
-
 
     @Override
     public final RESULT call() throws Exception {
+        reset();
 
         if (httpUtil == null)
             throw new NoSpecifyNetUtil("Specify util before starting.");

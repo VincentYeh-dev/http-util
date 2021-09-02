@@ -25,7 +25,6 @@ public class FileDownloader extends URLDownloader<File> {
 
     @Override
     protected void handleInputStream(InputStream inputStream, URLDownloaderListener listener) throws IOException {
-        downloadBytes=new BigDecimal(0);
         OutputStream targetFileStream = new FileOutputStream(target);
         try{
             byte[] bytes = new byte[bufferSize];
@@ -60,5 +59,10 @@ public class FileDownloader extends URLDownloader<File> {
     @Override
     public BigDecimal getDownloadedBytes() {
         return downloadBytes;
+    }
+
+    @Override
+    protected void resetSubclass() {
+        downloadBytes=new BigDecimal(0);
     }
 }

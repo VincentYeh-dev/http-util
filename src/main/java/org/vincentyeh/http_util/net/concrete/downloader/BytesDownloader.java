@@ -7,11 +7,12 @@ import org.vincentyeh.http_util.net.framework.downloader.listener.URLDownloaderL
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class BytesDownloader extends URLDownloader<List<Byte>> {
-    private List<Byte> bytes;
+    private final List<Byte> bytes = new LinkedList<>();
+    private BigDecimal downloadBytes = new BigDecimal(0);
 
     public BytesDownloader(URL url, int timeoutMillis, Headers headers) {
         super(url, timeoutMillis, headers);
@@ -19,10 +20,15 @@ public class BytesDownloader extends URLDownloader<List<Byte>> {
 
     @Override
     protected void handleInputStream(InputStream inputStream, URLDownloaderListener listener) throws Exception {
-        bytes = new ArrayList<>();
         int b;
+
         while ((b = inputStream.read()) != -1) {
             bytes.add((byte) b);
+            synchronized (this) {
+                downloadBytes = new BigDecimal(bytes.size());
+                if (listener != null)
+                    listener.download(this, downloadBytes);
+            }
         }
     }
 
@@ -33,7 +39,12 @@ public class BytesDownloader extends URLDownloader<List<Byte>> {
 
     @Override
     public BigDecimal getDownloadedBytes() {
-        return new BigDecimal(bytes.size());
+        return downloadBytes;
+    }
+
+    @Override
+    protected void resetSubclass() {
+        bytes.clear();
     }
 
 }
