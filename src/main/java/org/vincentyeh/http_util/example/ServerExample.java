@@ -9,7 +9,7 @@ public class ServerExample {
 
     public static void main(String[] args) throws IOException {
         HttpServerUtil util=new StandardHttpServerUtil();
-        util.createOneTimeServer("/", exchange -> {
+        util.createOneTimeServer("/", 80,exchange -> {
             byte[] data="OK".getBytes(StandardCharsets.UTF_8);
             try {
                 System.out.println("OK");

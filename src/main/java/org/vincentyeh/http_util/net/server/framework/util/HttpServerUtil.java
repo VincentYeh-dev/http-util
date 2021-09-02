@@ -6,6 +6,6 @@ import java.io.IOException;
 
 public interface HttpServerUtil {
 
-    void createOneTimeServer(String path, RequestListener listener) throws IOException;
+    void createOneTimeServer(String path,int port, RequestListener listener) throws IOException;
 
 }

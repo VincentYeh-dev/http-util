@@ -11,8 +11,8 @@ import java.util.concurrent.Executors;
 
 public class StandardHttpServerUtil implements HttpServerUtil {
 
-    public void createOneTimeServer(String path, RequestListener listener) throws IOException {
-        HttpServer server = HttpServer.create(new InetSocketAddress(80), 100);
+    public void createOneTimeServer(String path,int port, RequestListener listener) throws IOException {
+        HttpServer server = HttpServer.create(new InetSocketAddress(port), 100);
 
         ExecutorService httpThreadPool = Executors.newSingleThreadExecutor();
         server.setExecutor(httpThreadPool);
