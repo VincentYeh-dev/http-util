@@ -28,6 +28,7 @@ public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
     private final int timeoutMillis;
     private BigDecimal totalBytes = new BigDecimal(0);
 
+
     protected abstract void handleInputStream(InputStream inputStream, URLDownloaderListener listener) throws Exception;
 
     protected abstract RESULT getResult();

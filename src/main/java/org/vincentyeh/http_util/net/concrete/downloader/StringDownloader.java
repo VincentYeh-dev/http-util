@@ -13,6 +13,7 @@ import java.nio.charset.Charset;
 public class StringDownloader extends URLDownloader<String> {
 
     private final Charset charset;
+    private BigDecimal downloadBytes;
 
     private final StringBuilder builder = new StringBuilder();
 
@@ -23,11 +24,18 @@ public class StringDownloader extends URLDownloader<String> {
 
     @Override
     protected void handleInputStream(InputStream inputStream, URLDownloaderListener listener) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, charset));
+        downloadBytes = new BigDecimal(0);
+        Reader reader = new InputStreamReader(inputStream, charset);
 
-        String buf;
-        while ((buf = reader.readLine()) != null) {
-            builder.append(buf).append("\n");
+        int bufferSize = 1024;
+        char[] buffer = new char[bufferSize];
+        for (int numRead; (numRead = reader.read(buffer, 0, buffer.length)) > 0; ) {
+            builder.append(buffer, 0, numRead);
+            downloadBytes = downloadBytes.add(new BigDecimal(numRead));
+
+            if (listener != null)
+                listener.download(this, downloadBytes);
+
         }
     }
 
@@ -38,7 +46,7 @@ public class StringDownloader extends URLDownloader<String> {
 
     @Override
     public BigDecimal getDownloadedBytes() {
-        return new BigDecimal(0);
+        return downloadBytes;
     }
 
 }
