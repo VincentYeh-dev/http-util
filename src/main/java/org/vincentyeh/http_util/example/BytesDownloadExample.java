@@ -1,17 +1,14 @@
 package org.vincentyeh.http_util.example;
 
-import org.vincentyeh.http_util.net.concrete.downloader.BytesDownloader;
-import org.vincentyeh.http_util.net.concrete.downloader.StringDownloader;
-import org.vincentyeh.http_util.net.concrete.utils.LocalProxyHttpClientUtil;
-import org.vincentyeh.http_util.net.framework.connection.header.Cookies;
-import org.vincentyeh.http_util.net.framework.connection.header.Headers;
-import org.vincentyeh.http_util.net.framework.downloader.URLDownloader;
-import org.vincentyeh.http_util.net.framework.downloader.listener.URLDownloaderListener;
+import org.vincentyeh.http_util.net.client.concrete.downloader.BytesDownloader;
+import org.vincentyeh.http_util.net.client.concrete.utils.LocalProxyHttpClientUtil;
+import org.vincentyeh.http_util.net.client.framework.connection.header.Headers;
+import org.vincentyeh.http_util.net.client.framework.downloader.URLDownloader;
+import org.vincentyeh.http_util.net.client.framework.downloader.listener.URLDownloaderListener;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
