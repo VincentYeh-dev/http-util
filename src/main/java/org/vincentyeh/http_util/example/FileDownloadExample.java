@@ -1,14 +1,12 @@
 package org.vincentyeh.http_util.example;
 
-import org.vincentyeh.http_util.net.concrete.downloader.FileDownloader;
-import org.vincentyeh.http_util.net.concrete.utils.StandardHttpClientUtil;
-import org.vincentyeh.http_util.net.framework.connection.header.Headers;
-import org.vincentyeh.http_util.net.framework.downloader.URLDownloader;
+import org.vincentyeh.http_util.net.client.concrete.downloader.FileDownloader;
+import org.vincentyeh.http_util.net.client.concrete.utils.StandardHttpClientUtil;
+import org.vincentyeh.http_util.net.client.framework.connection.header.Headers;
+import org.vincentyeh.http_util.net.client.framework.downloader.URLDownloader;
 
 import java.io.File;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FileDownloadExample {
     public static void main(String[] args) throws Exception {
