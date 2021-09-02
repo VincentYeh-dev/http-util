@@ -19,24 +19,29 @@ import java.security.NoSuchAlgorithmException;
 public class StandardHttpClientUtil implements HttpClientUtil {
 
     @Override
-    public HttpConnection openConnection(URL url, Headers headers, int timeoutMillisecond) throws IOException, NoSuchAlgorithmException, KeyManagementException {
-        URLConnection urlConnection = url.openConnection();
-        return handleHttpConnection(urlConnection,headers,timeoutMillisecond);
+    public HttpConnection get(URL url, Headers headers, int timeoutMillisecond, Proxy proxy) throws Exception {
+        return handleHttpConnection(proxy == null ? url.openConnection() : url.openConnection(proxy), "GET", headers, timeoutMillisecond, null);
     }
 
     @Override
-    public HttpConnection openWithProxyConnection(URL url, Headers headers, int timeoutMillisecond, Proxy proxy) throws IOException, NoSuchAlgorithmException, KeyManagementException {
-        URLConnection urlConnection = url.openConnection(proxy);
-        return handleHttpConnection(urlConnection,headers,timeoutMillisecond);
+    public HttpConnection post(URL url, Headers headers, int timeoutMillisecond, byte[] body, Proxy proxy) throws Exception {
+        HttpConnection connection = handleHttpConnection(proxy == null ? url.openConnection() : url.openConnection(proxy), "POST", headers, timeoutMillisecond, body);
+
+        if (body != null)
+            connection.setLength(body.length);
+        else
+            connection.setLength(0);
+
+        return connection;
     }
 
 
+    private HttpConnection handleHttpConnection(URLConnection urlConnection, String requestMethod, Headers headers, int timeoutMillisecond, byte[] body) throws NoSuchAlgorithmException, KeyManagementException, IOException {
 
-    private HttpConnection handleHttpConnection(URLConnection urlConnection, Headers headers, int timeoutMillisecond) throws NoSuchAlgorithmException, KeyManagementException {
         if (urlConnection instanceof HttpURLConnection) {
             HttpConnection connection;
             if (urlConnection instanceof HttpsURLConnection) {
-                connection = new HttpsConnectionAdaptor((HttpsURLConnection) urlConnection);
+                connection = new HttpsConnectionAdaptor((HttpsURLConnection) urlConnection,true,true);
                 SSLContext sc = SSLContext.getInstance("TLSv1.2");
 
                 // Create a trust manager that does not validate certificate chains
@@ -44,16 +49,23 @@ public class StandardHttpClientUtil implements HttpClientUtil {
                 ((HttpsConnection) connection).setSSLContext(sc);
 
             } else {
-                connection = new HttpConnectionAdaptor((HttpURLConnection) urlConnection);
+                connection = new HttpConnectionAdaptor((HttpURLConnection) urlConnection,true,true);
             }
 
             connection.setConnectTimeout(timeoutMillisecond);
-            if (headers != null)
+
+            if (headers != null) {
                 connection.setHeader(headers);
+            }
+
+            connection.setRequestMethod(requestMethod);
 
             connection.setUseCaches(false);
             connection.setReadTimeout(timeoutMillisecond);
-            connection.setDoInput(true);
+
+            if (body != null)
+                connection.getOutputStream().write(body);
+
             return connection;
         }
         throw new RuntimeException();

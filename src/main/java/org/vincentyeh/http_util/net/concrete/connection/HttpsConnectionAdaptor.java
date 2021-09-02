@@ -7,8 +7,8 @@ import javax.net.ssl.SSLContext;
 public class HttpsConnectionAdaptor extends HttpConnectionAdaptor implements HttpsConnection{
     private final HttpsURLConnection connection;
 
-    public HttpsConnectionAdaptor(HttpsURLConnection connection) {
-        super(connection);
+    public HttpsConnectionAdaptor(HttpsURLConnection connection, boolean doInput, boolean doOutput) {
+        super(connection,doInput,doOutput);
         this.connection = connection;
     }
 
