@@ -17,8 +17,9 @@ public class StringDownloadExample {
         headers.setConnection(Headers.CONNECTION_CLOSE);
         headers.setReferer("example.org");
         Cookies cookies=new Cookies();
-        cookies.setProperty("username","vincent");
+        cookies.setProperty("username","user");
         headers.setCookies(cookies);
+        headers.setAuthorization("Basic","account:password");
 
         URLDownloader<String> downloader = new StringDownloader(new URL("https://example.org/"), StandardCharsets.UTF_8, 1000,headers);
         System.out.println(downloader.get());

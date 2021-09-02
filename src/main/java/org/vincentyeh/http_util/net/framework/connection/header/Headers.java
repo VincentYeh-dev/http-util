@@ -1,9 +1,13 @@
 package org.vincentyeh.http_util.net.framework.connection.header;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static java.lang.String.format;
 
 public class Headers {
     public static String CONNECTION_KEEP_ALIVE = "keep-alive";
@@ -45,6 +49,12 @@ public class Headers {
 
     public void setCookies(Cookies cookies){
         map.put("Cookie",cookies);
+    }
+
+    public void setAuthorization(String type,String credentials){
+        Base64.Encoder encoder=Base64.getEncoder();
+        String encoded=encoder.encodeToString(credentials.getBytes(StandardCharsets.UTF_8));
+        map.put("Authorization",format("%s %s",type,encoded));
     }
 
     public Map<String, String> getMap() {
