@@ -36,4 +36,9 @@ public class BytesDownloader extends URLDownloader<List<Byte>> {
         return new BigDecimal(bytes.size());
     }
 
+    @Override
+    protected void resetSubclass() {
+        bytes.clear();
+    }
+
 }
