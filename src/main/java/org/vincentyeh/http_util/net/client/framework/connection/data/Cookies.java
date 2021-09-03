@@ -1,4 +1,4 @@
-package org.vincentyeh.http_util.net.client.framework.header;
+package org.vincentyeh.http_util.net.client.framework.connection.data;
 
 import java.util.Properties;
 

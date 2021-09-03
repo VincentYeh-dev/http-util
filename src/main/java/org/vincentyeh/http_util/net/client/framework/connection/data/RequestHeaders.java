@@ -1,8 +1,7 @@
-package org.vincentyeh.http_util.net.client.framework.header;
+package org.vincentyeh.http_util.net.client.framework.connection.data;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 

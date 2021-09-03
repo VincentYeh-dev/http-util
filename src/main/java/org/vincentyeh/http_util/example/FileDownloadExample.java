@@ -2,7 +2,7 @@ package org.vincentyeh.http_util.example;
 
 import org.vincentyeh.http_util.net.client.concrete.downloader.FileDownloader;
 import org.vincentyeh.http_util.net.client.concrete.utils.StandardHttpClientUtil;
-import org.vincentyeh.http_util.net.client.framework.header.RequestHeaders;
+import org.vincentyeh.http_util.net.client.framework.connection.data.RequestHeaders;
 import org.vincentyeh.http_util.net.client.framework.downloader.URLDownloader;
 
 import java.io.File;

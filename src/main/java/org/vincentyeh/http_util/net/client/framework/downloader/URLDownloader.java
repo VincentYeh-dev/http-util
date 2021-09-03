@@ -1,7 +1,7 @@
 package org.vincentyeh.http_util.net.client.framework.downloader;
 
 import org.vincentyeh.http_util.net.client.framework.connection.Response;
-import org.vincentyeh.http_util.net.client.framework.header.RequestHeaders;
+import org.vincentyeh.http_util.net.client.framework.connection.data.RequestHeaders;
 import org.vincentyeh.http_util.net.client.framework.downloader.exception.NoSpecifyNetUtil;
 import org.vincentyeh.http_util.net.client.framework.downloader.listener.URLDownloaderListener;
 import org.vincentyeh.http_util.net.client.framework.utils.HttpClientUtil;
@@ -60,8 +60,8 @@ public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
         Response response = httpUtil.get(url, headers, timeoutMillis, null);
 //        Session session = httpUtil.post(url, headers, timeoutMillis, "aaaffffff".getBytes(StandardCharsets.UTF_8), null);
 
-        System.out.println("response code:" + response.getCode());
-        System.out.println("header:");
+//        System.out.println("response code:" + response.getCode());
+//        System.out.println("header:");
         response.getHeader().forEach((key, value) -> System.out.printf("\t- %s:%s\n", key, value));
 
         totalBytes = new BigDecimal(response.getContentLength());

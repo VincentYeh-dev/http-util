@@ -2,8 +2,8 @@ package org.vincentyeh.http_util.example;
 
 import org.vincentyeh.http_util.net.client.concrete.downloader.StringDownloader;
 import org.vincentyeh.http_util.net.client.concrete.utils.LocalProxyHttpClientUtil;
-import org.vincentyeh.http_util.net.client.framework.header.Cookies;
-import org.vincentyeh.http_util.net.client.framework.header.RequestHeaders;
+import org.vincentyeh.http_util.net.client.framework.connection.data.Cookies;
+import org.vincentyeh.http_util.net.client.framework.connection.data.RequestHeaders;
 import org.vincentyeh.http_util.net.client.framework.downloader.URLDownloader;
 import org.vincentyeh.http_util.net.client.framework.downloader.listener.URLDownloaderListener;
 
@@ -26,7 +26,7 @@ public class StringDownloadExample {
         headers.setCookies(cookies);
         headers.setAuthorization("Basic", "account:password");
 
-        URLDownloader<String> downloader = new StringDownloader(new URL("https://example.org/"), StandardCharsets.UTF_8, 1000, headers);
+        URLDownloader<String> downloader = new StringDownloader(new URL(args[0]), StandardCharsets.UTF_8, 1000, headers);
         downloader.setListener(listener);
         System.out.println(downloader.get());
     }
