@@ -6,18 +6,12 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
-public class RequestHeaders {
+public class RequestHeaders extends HashMap<String, List<String>> {
     public static String CONNECTION_KEEP_ALIVE = "keep-alive";
     public static String CONNECTION_CLOSE = "close";
 
-    private final Map<String, Object> map;
-
-    public RequestHeaders() {
-        this.map = new HashMap<>();
-    }
-
     public void setUserAgent(String agent) {
-        put("User-Agent", agent);
+        put("User-Agent", single(agent));
     }
 
     public void setAccept(List<String> accepts) {
@@ -33,47 +27,26 @@ public class RequestHeaders {
     }
 
     public void setReferer(String referer) {
-        put("Referer", referer);
+        put("Referer", single(referer));
     }
 
     public void setConnection(String connection) {
-        put("Connection", connection);
+        put("Connection", single(connection));
     }
 
     public void setCookies(Cookies cookies) {
-        put("Cookie", cookies);
+        put("Cookie", single(cookies.toString()));
     }
 
     public void setAuthorization(String type, String credentials) {
         Base64.Encoder encoder = Base64.getEncoder();
         String encoded = encoder.encodeToString(credentials.getBytes(StandardCharsets.UTF_8));
-        put("Authorization", format("%s %s", type, encoded));
+        put("Authorization", single(format("%s %s", type, encoded)));
     }
 
-    private void put(String key, Object object) {
-        map.put(key, object);
-    }
-
-    public void put(String key, String string) {
-        map.put(key, string);
-    }
-
-    public String get(String key) {
-        Object value = map.get(key);
-        if (value instanceof List)
-            return listToString((List<?>) value);
-        else if (value instanceof String)
-            return (String) value;
-        else
-            return value.toString();
-    }
-
-
-    public Set<String> getKeys() {
-        return map.keySet();
-    }
-
-    private String listToString(List<?> list) {
-        return list.stream().map(Object::toString).collect(Collectors.joining(","));
+    private List<String> single(String object) {
+        List<String> list = new ArrayList<>();
+        list.add(object);
+        return list;
     }
 }

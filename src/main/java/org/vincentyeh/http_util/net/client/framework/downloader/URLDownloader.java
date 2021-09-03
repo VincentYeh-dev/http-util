@@ -1,11 +1,11 @@
 package org.vincentyeh.http_util.net.client.framework.downloader;
 
-import org.vincentyeh.http_util.net.client.framework.connection.HttpConnection;
+import org.vincentyeh.http_util.net.client.framework.connection.Response;
 import org.vincentyeh.http_util.net.client.framework.header.RequestHeaders;
 import org.vincentyeh.http_util.net.client.framework.downloader.exception.NoSpecifyNetUtil;
 import org.vincentyeh.http_util.net.client.framework.downloader.listener.URLDownloaderListener;
+import org.vincentyeh.http_util.net.client.framework.connection.Session;
 import org.vincentyeh.http_util.net.client.framework.utils.HttpClientUtil;
-import org.vincentyeh.http_util.net.client.framework.utils.LengthNotFound;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -58,16 +58,18 @@ public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
         if (listener != null)
             listener.start(this);
 
-//        HttpConnection connection = httpUtil.post(url,headers, timeoutMillis,"abc".getBytes(StandardCharsets.UTF_8),null);
-        HttpConnection connection = httpUtil.get(url,headers, timeoutMillis,null);
-        try {
-            totalBytes = connection.getLength();
-        } catch (LengthNotFound e) {
-            totalBytes = new BigDecimal(0);
-        }
+        Session session = httpUtil.get(url, headers, timeoutMillis, null);
+//        Session session = httpUtil.post(url, headers, timeoutMillis, "aaaffffff".getBytes(StandardCharsets.UTF_8), null);
+        Response response = session.getResponse();
+
+        System.out.println("response code:" + response.getCode());
+        System.out.println("header:");
+        response.getHeader().forEach((key, value) -> System.out.printf("\t- %s:%s\n", key, value));
+
+        totalBytes = new BigDecimal(response.getContentLength());
 
         try {
-            InputStream urlInputStream = connection.getInputStream();
+            InputStream urlInputStream = response.getBodyInputStream();
             handleInputStream(urlInputStream, listener);
             urlInputStream.close();
             return getResult();
@@ -80,7 +82,7 @@ public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
                 listener.onIoException(this, e);
             throw e;
         } finally {
-            connection.disconnect();
+            session.close();
         }
     }
 

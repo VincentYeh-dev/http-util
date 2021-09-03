@@ -1,78 +1,22 @@
 package org.vincentyeh.http_util.net.client.concrete.utils;
 
-import org.vincentyeh.http_util.net.client.concrete.connection.HttpConnectionAdaptor;
-import org.vincentyeh.http_util.net.client.concrete.connection.HttpsConnectionAdaptor;
-import org.vincentyeh.http_util.net.client.framework.connection.HttpConnection;
-import org.vincentyeh.http_util.net.client.framework.connection.HttpsConnection;
-import org.vincentyeh.http_util.net.client.framework.header.RequestHeaders;
+import org.vincentyeh.http_util.net.client.concrete.connection.ResponseConnectionAdaptor;
+import org.vincentyeh.http_util.net.client.concrete.connection.RequestConnectionAdaptor;
+import org.vincentyeh.http_util.net.client.concrete.connection.SessionConnectionAdaptor;
+import org.vincentyeh.http_util.net.client.framework.connection.Request;
+import org.vincentyeh.http_util.net.client.framework.connection.RequestMethod;
+import org.vincentyeh.http_util.net.client.framework.connection.Session;
 import org.vincentyeh.http_util.net.client.framework.utils.HttpClientUtil;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import java.io.IOException;
 import java.net.*;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
+import java.util.List;
+import java.util.Map;
 
 public class StandardHttpClientUtil implements HttpClientUtil {
-
-    @Override
-    public HttpConnection get(URL url, RequestHeaders headers, int timeoutMillisecond, Proxy proxy) throws Exception {
-        return handleHttpConnection(proxy == null ? url.openConnection() : url.openConnection(proxy), "GET", headers, timeoutMillisecond);
-    }
-
-    @Override
-    public HttpConnection post(URL url, RequestHeaders headers, int timeoutMillisecond, byte[] body, Proxy proxy) throws Exception {
-        HttpConnection connection=handleHttpConnection(proxy == null ? url.openConnection() : url.openConnection(proxy), "POST", headers, timeoutMillisecond);
-        if (body != null)
-            connection.setLength(body.length);
-        else
-            connection.setLength(0);
-
-        connection.connect();
-        write(connection,body);
-
-        return connection;
-    }
-
-
-    private HttpConnection handleHttpConnection(URLConnection urlConnection, String requestMethod, RequestHeaders headers, int timeoutMillisecond) throws NoSuchAlgorithmException, KeyManagementException, IOException {
-
-        if (urlConnection instanceof HttpURLConnection) {
-            HttpConnection connection;
-            if (urlConnection instanceof HttpsURLConnection) {
-                connection = new HttpsConnectionAdaptor((HttpsURLConnection) urlConnection,true,true);
-                SSLContext sc = SSLContext.getInstance("TLSv1.2");
-
-                // Create a trust manager that does not validate certificate chains
-                sc.init(null, trustAllCerts, new java.security.SecureRandom());
-                ((HttpsConnection) connection).setSSLContext(sc);
-
-            } else {
-                connection = new HttpConnectionAdaptor((HttpURLConnection) urlConnection,true,true);
-            }
-
-            connection.setConnectTimeout(timeoutMillisecond);
-
-            if (headers != null) {
-                connection.setHeader(headers);
-            }
-
-            connection.setRequestMethod(requestMethod);
-
-            connection.setUseCaches(false);
-            connection.setReadTimeout(timeoutMillisecond);
-
-            return connection;
-        }
-        throw new RuntimeException();
-    }
-    private void write(HttpConnection connection,byte[] body) throws IOException {
-        connection.getOutputStream().write(body);
-        connection.getOutputStream().close();
-    }
 
     private TrustManager[] trustAllCerts = new TrustManager[]{
             new X509TrustManager() {
@@ -89,4 +33,60 @@ public class StandardHttpClientUtil implements HttpClientUtil {
     };
 
 
+    @Override
+    public Session get(URL url, Map<String, List<String>> headers, int timeoutMillisecond, Proxy proxy) throws Exception {
+        Request request = new RequestConnectionAdaptor(createConnection(url,timeoutMillisecond,proxy));
+        request.setMethod(RequestMethod.GET);
+        request.setHeaders(headers);
+        return sendRequest(request);
+    }
+
+    @Override
+    public Session post(URL url, Map<String, List<String>> headers, int timeoutMillisecond, byte[] body, Proxy proxy) throws Exception {
+        Request request = new RequestConnectionAdaptor(createConnection(url,timeoutMillisecond,proxy));
+        request.setMethod(RequestMethod.POST);
+        request.setHeaders(headers);
+        request.setBody(body);
+        return sendRequest(request);
+    }
+
+    private Session sendRequest(Request request) throws Exception {
+        HttpURLConnection connection = request.open();
+        request.sendBody();
+        return new SessionConnectionAdaptor(connection, new ResponseConnectionAdaptor(connection));
+    }
+
+    private HttpURLConnection createConnection(URL url, int timeoutMillisecond, Proxy proxy) throws Exception {
+        if (proxy != null)
+            return httpConnectionSetup(url.openConnection(proxy), timeoutMillisecond);
+        else
+            return httpConnectionSetup(url.openConnection(), timeoutMillisecond);
+    }
+
+
+    private HttpURLConnection httpConnectionSetup(URLConnection urlConnection, int timeoutMillisecond) throws Exception {
+        HttpURLConnection connection;
+        if (urlConnection instanceof HttpURLConnection) {
+            if (urlConnection instanceof HttpsURLConnection) {
+                connection = (HttpsURLConnection) urlConnection;
+                SSLContext sc = SSLContext.getInstance("TLSv1.2");
+
+                // Create a trust manager that does not validate certificate chains
+                sc.init(null, trustAllCerts, new java.security.SecureRandom());
+                ((HttpsURLConnection) connection).setSSLSocketFactory(sc.getSocketFactory());
+
+            } else {
+                connection = (HttpURLConnection) urlConnection;
+            }
+
+            connection.setReadTimeout(timeoutMillisecond);
+            connection.setConnectTimeout(timeoutMillisecond);
+            connection.setUseCaches(false);
+            connection.setDoInput(true);
+            connection.setDoOutput(true);
+
+            return connection;
+        }
+        throw new RuntimeException();
+    }
 }
