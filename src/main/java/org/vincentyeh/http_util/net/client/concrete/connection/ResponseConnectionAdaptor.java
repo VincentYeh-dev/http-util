@@ -16,7 +16,6 @@ public class ResponseConnectionAdaptor extends Response {
         this.connection = connection;
     }
 
-
     @Override
     public Map<String, List<String>> getHeader() {
         return connection.getHeaderFields();
@@ -26,4 +25,11 @@ public class ResponseConnectionAdaptor extends Response {
     public InputStream getBodyInputStream() throws IOException {
         return connection.getInputStream();
     }
+
+
+    @Override
+    public void close() {
+        connection.disconnect();
+    }
+
 }

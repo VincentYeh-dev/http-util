@@ -1,7 +1,6 @@
 package org.vincentyeh.http_util.net.client.framework.connection;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.List;
@@ -23,5 +22,7 @@ public abstract class Request {
 
     public abstract void sendBody() throws IOException;
 
-    public abstract HttpURLConnection open() throws IOException;
+    public abstract Response open() throws IOException;
+
+    public abstract void close();
 }

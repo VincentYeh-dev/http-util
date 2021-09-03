@@ -14,6 +14,8 @@ public abstract class Response {
         this.contentLength=contentLength;
     }
 
+    public abstract void close();
+
     public abstract Map<String, List<String>> getHeader();
 
     public abstract InputStream getBodyInputStream() throws IOException;
@@ -25,5 +27,6 @@ public abstract class Response {
     public final long getContentLength() {
         return contentLength;
     }
+
 
 }

@@ -2,10 +2,9 @@ package org.vincentyeh.http_util.net.client.concrete.utils;
 
 import org.vincentyeh.http_util.net.client.concrete.connection.ResponseConnectionAdaptor;
 import org.vincentyeh.http_util.net.client.concrete.connection.RequestConnectionAdaptor;
-import org.vincentyeh.http_util.net.client.concrete.connection.SessionConnectionAdaptor;
 import org.vincentyeh.http_util.net.client.framework.connection.Request;
 import org.vincentyeh.http_util.net.client.framework.connection.RequestMethod;
-import org.vincentyeh.http_util.net.client.framework.connection.Session;
+import org.vincentyeh.http_util.net.client.framework.connection.Response;
 import org.vincentyeh.http_util.net.client.framework.utils.HttpClientUtil;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -34,26 +33,22 @@ public class StandardHttpClientUtil implements HttpClientUtil {
 
 
     @Override
-    public Session get(URL url, Map<String, List<String>> headers, int timeoutMillisecond, Proxy proxy) throws Exception {
-        Request request = new RequestConnectionAdaptor(createConnection(url,timeoutMillisecond,proxy));
-        request.setMethod(RequestMethod.GET);
-        request.setHeaders(headers);
+    public Response get(URL url, Map<String, List<String>> headers, int timeoutMillisecond, Proxy proxy) throws Exception {
+        Request request = new RequestConnectionAdaptor(createConnection(url, timeoutMillisecond, proxy));
+        request.setMethod(RequestMethod.GET).setHeaders(headers);
         return sendRequest(request);
     }
 
     @Override
-    public Session post(URL url, Map<String, List<String>> headers, int timeoutMillisecond, byte[] body, Proxy proxy) throws Exception {
-        Request request = new RequestConnectionAdaptor(createConnection(url,timeoutMillisecond,proxy));
-        request.setMethod(RequestMethod.POST);
-        request.setHeaders(headers);
-        request.setBody(body);
+    public Response post(URL url, Map<String, List<String>> headers, int timeoutMillisecond, byte[] body, Proxy proxy) throws Exception {
+        Request request = new RequestConnectionAdaptor(createConnection(url, timeoutMillisecond, proxy));
+        request.setMethod(RequestMethod.POST).setHeaders(headers).setBody(body);
         return sendRequest(request);
     }
 
-    private Session sendRequest(Request request) throws Exception {
-        HttpURLConnection connection = request.open();
+    private Response sendRequest(Request request) throws Exception {
         request.sendBody();
-        return new SessionConnectionAdaptor(connection, new ResponseConnectionAdaptor(connection));
+        return request.open();
     }
 
     private HttpURLConnection createConnection(URL url, int timeoutMillisecond, Proxy proxy) throws Exception {

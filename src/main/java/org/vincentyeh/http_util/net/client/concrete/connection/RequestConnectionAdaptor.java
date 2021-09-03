@@ -2,6 +2,8 @@ package org.vincentyeh.http_util.net.client.concrete.connection;
 
 import org.vincentyeh.http_util.net.client.framework.connection.Request;
 import org.vincentyeh.http_util.net.client.framework.connection.RequestMethod;
+import org.vincentyeh.http_util.net.client.framework.connection.Response;
+
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
@@ -68,9 +70,14 @@ public class RequestConnectionAdaptor extends Request {
     }
 
     @Override
-    public HttpURLConnection open() throws IOException {
+    public Response open() throws IOException {
         connection.connect();
-        return connection;
+        return new ResponseConnectionAdaptor(connection);
+    }
+
+    @Override
+    public void close() {
+        connection.disconnect();
     }
 
 

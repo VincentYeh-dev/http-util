@@ -4,7 +4,6 @@ import org.vincentyeh.http_util.net.client.framework.connection.Response;
 import org.vincentyeh.http_util.net.client.framework.header.RequestHeaders;
 import org.vincentyeh.http_util.net.client.framework.downloader.exception.NoSpecifyNetUtil;
 import org.vincentyeh.http_util.net.client.framework.downloader.listener.URLDownloaderListener;
-import org.vincentyeh.http_util.net.client.framework.connection.Session;
 import org.vincentyeh.http_util.net.client.framework.utils.HttpClientUtil;
 
 import java.io.*;
@@ -58,9 +57,8 @@ public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
         if (listener != null)
             listener.start(this);
 
-        Session session = httpUtil.get(url, headers, timeoutMillis, null);
+        Response response = httpUtil.get(url, headers, timeoutMillis, null);
 //        Session session = httpUtil.post(url, headers, timeoutMillis, "aaaffffff".getBytes(StandardCharsets.UTF_8), null);
-        Response response = session.getResponse();
 
         System.out.println("response code:" + response.getCode());
         System.out.println("header:");
@@ -82,7 +80,7 @@ public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
                 listener.onIoException(this, e);
             throw e;
         } finally {
-            session.close();
+            response.close();
         }
     }
 
