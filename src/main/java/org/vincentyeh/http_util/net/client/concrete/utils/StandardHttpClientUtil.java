@@ -4,7 +4,7 @@ import org.vincentyeh.http_util.net.client.concrete.connection.HttpConnectionAda
 import org.vincentyeh.http_util.net.client.concrete.connection.HttpsConnectionAdaptor;
 import org.vincentyeh.http_util.net.client.framework.connection.HttpConnection;
 import org.vincentyeh.http_util.net.client.framework.connection.HttpsConnection;
-import org.vincentyeh.http_util.net.client.framework.connection.header.Headers;
+import org.vincentyeh.http_util.net.client.framework.header.RequestHeaders;
 import org.vincentyeh.http_util.net.client.framework.utils.HttpClientUtil;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -19,12 +19,12 @@ import java.security.NoSuchAlgorithmException;
 public class StandardHttpClientUtil implements HttpClientUtil {
 
     @Override
-    public HttpConnection get(URL url, Headers headers, int timeoutMillisecond, Proxy proxy) throws Exception {
+    public HttpConnection get(URL url, RequestHeaders headers, int timeoutMillisecond, Proxy proxy) throws Exception {
         return handleHttpConnection(proxy == null ? url.openConnection() : url.openConnection(proxy), "GET", headers, timeoutMillisecond);
     }
 
     @Override
-    public HttpConnection post(URL url, Headers headers, int timeoutMillisecond, byte[] body, Proxy proxy) throws Exception {
+    public HttpConnection post(URL url, RequestHeaders headers, int timeoutMillisecond, byte[] body, Proxy proxy) throws Exception {
         HttpConnection connection=handleHttpConnection(proxy == null ? url.openConnection() : url.openConnection(proxy), "POST", headers, timeoutMillisecond);
         if (body != null)
             connection.setLength(body.length);
@@ -38,7 +38,7 @@ public class StandardHttpClientUtil implements HttpClientUtil {
     }
 
 
-    private HttpConnection handleHttpConnection(URLConnection urlConnection, String requestMethod, Headers headers, int timeoutMillisecond) throws NoSuchAlgorithmException, KeyManagementException, IOException {
+    private HttpConnection handleHttpConnection(URLConnection urlConnection, String requestMethod, RequestHeaders headers, int timeoutMillisecond) throws NoSuchAlgorithmException, KeyManagementException, IOException {
 
         if (urlConnection instanceof HttpURLConnection) {
             HttpConnection connection;

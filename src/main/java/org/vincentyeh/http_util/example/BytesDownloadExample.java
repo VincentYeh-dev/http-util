@@ -2,7 +2,7 @@ package org.vincentyeh.http_util.example;
 
 import org.vincentyeh.http_util.net.client.concrete.downloader.BytesDownloader;
 import org.vincentyeh.http_util.net.client.concrete.utils.LocalProxyHttpClientUtil;
-import org.vincentyeh.http_util.net.client.framework.connection.header.Headers;
+import org.vincentyeh.http_util.net.client.framework.header.RequestHeaders;
 import org.vincentyeh.http_util.net.client.framework.downloader.URLDownloader;
 import org.vincentyeh.http_util.net.client.framework.downloader.listener.URLDownloaderListener;
 
@@ -17,9 +17,9 @@ public class BytesDownloadExample {
 
     public static void main(String[] args) throws Exception {
         URLDownloader.warpHttpClientUtil(new LocalProxyHttpClientUtil());
-        Headers headers = new Headers();
+        RequestHeaders headers = new RequestHeaders();
         headers.setUserAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36");
-        headers.setConnection(Headers.CONNECTION_CLOSE);
+        headers.setConnection(RequestHeaders.CONNECTION_CLOSE);
 
         URLDownloader<List<Byte>> downloader = new BytesDownloader(new URL("https://ts6.hhmm0.com:9999/20210331/lRpXNQKR/1000kb/hls/key.key"), 1000, headers);
         downloader.setListener(listener);

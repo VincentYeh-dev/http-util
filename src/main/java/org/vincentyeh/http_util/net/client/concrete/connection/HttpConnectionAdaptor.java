@@ -1,7 +1,7 @@
 package org.vincentyeh.http_util.net.client.concrete.connection;
 
 import org.vincentyeh.http_util.net.client.framework.connection.HttpConnection;
-import org.vincentyeh.http_util.net.client.framework.connection.header.Headers;
+import org.vincentyeh.http_util.net.client.framework.header.RequestHeaders;
 import org.vincentyeh.http_util.net.client.framework.utils.LengthNotFound;
 
 import java.io.IOException;
@@ -10,12 +10,11 @@ import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
-import java.util.Map;
 
 public class HttpConnectionAdaptor implements HttpConnection {
     private final HttpURLConnection connection;
 
-    public HttpConnectionAdaptor(HttpURLConnection connection,boolean doInput,boolean doOutput) {
+    public HttpConnectionAdaptor(HttpURLConnection connection, boolean doInput, boolean doOutput) {
         connection.setDoInput(doInput);
         connection.setDoOutput(doOutput);
         this.connection = connection;
@@ -43,10 +42,11 @@ public class HttpConnectionAdaptor implements HttpConnection {
     }
 
     @Override
-    public void setHeader(Headers headers) {
+    public void setHeader(RequestHeaders headers) {
         if (headers != null)
-            for (Map.Entry<String, String> entry : headers.getMap().entrySet())
-                connection.setRequestProperty(entry.getKey(), entry.getValue());
+            for (String key : headers.getKeys()) {
+                connection.setRequestProperty(key, headers.get(key));
+            }
     }
 
     @Override

@@ -1,7 +1,7 @@
 package org.vincentyeh.http_util.net.client.framework.downloader;
 
 import org.vincentyeh.http_util.net.client.framework.connection.HttpConnection;
-import org.vincentyeh.http_util.net.client.framework.connection.header.Headers;
+import org.vincentyeh.http_util.net.client.framework.header.RequestHeaders;
 import org.vincentyeh.http_util.net.client.framework.downloader.exception.NoSpecifyNetUtil;
 import org.vincentyeh.http_util.net.client.framework.downloader.listener.URLDownloaderListener;
 import org.vincentyeh.http_util.net.client.framework.utils.HttpClientUtil;
@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Callable;
 
 public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
@@ -25,7 +24,7 @@ public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
 
     private URLDownloaderListener listener;
     protected final URL url;
-    private final Headers headers;
+    private final RequestHeaders headers;
     private final int timeoutMillis;
     private BigDecimal totalBytes = new BigDecimal(0);
 
@@ -43,7 +42,7 @@ public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
         resetSubclass();
     }
 
-    public URLDownloader(URL url, int timeoutMillis, Headers headers) {
+    public URLDownloader(URL url, int timeoutMillis, RequestHeaders headers) {
         this.url = url;
         this.timeoutMillis = timeoutMillis;
         this.headers = headers;

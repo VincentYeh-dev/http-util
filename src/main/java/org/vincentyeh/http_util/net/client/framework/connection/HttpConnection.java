@@ -1,6 +1,6 @@
 package org.vincentyeh.http_util.net.client.framework.connection;
 
-import org.vincentyeh.http_util.net.client.framework.connection.header.Headers;
+import org.vincentyeh.http_util.net.client.framework.header.RequestHeaders;
 import org.vincentyeh.http_util.net.client.framework.utils.LengthNotFound;
 
 import java.io.IOException;
@@ -19,7 +19,7 @@ public interface HttpConnection {
 
     void setConnectTimeout(int timeInMillisSecond);
 
-    void setHeader(Headers headers);
+    void setHeader(RequestHeaders headers);
 
     void setUseCaches(boolean b);
 

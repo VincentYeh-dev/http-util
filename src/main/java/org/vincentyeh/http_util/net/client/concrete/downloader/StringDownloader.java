@@ -1,7 +1,7 @@
 package org.vincentyeh.http_util.net.client.concrete.downloader;
 
 
-import org.vincentyeh.http_util.net.client.framework.connection.header.Headers;
+import org.vincentyeh.http_util.net.client.framework.header.RequestHeaders;
 import org.vincentyeh.http_util.net.client.framework.downloader.URLDownloader;
 import org.vincentyeh.http_util.net.client.framework.downloader.listener.URLDownloaderListener;
 
@@ -23,7 +23,7 @@ public class StringDownloader extends URLDownloader<String> {
 
     private final StringBuilder builder = new StringBuilder();
 
-    public StringDownloader(URL url, Charset charset, int timeoutMillis, Headers headers) {
+    public StringDownloader(URL url, Charset charset, int timeoutMillis, RequestHeaders headers) {
         super(url, timeoutMillis, headers);
         this.charset = charset;
     }

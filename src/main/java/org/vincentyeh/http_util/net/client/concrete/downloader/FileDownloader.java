@@ -1,6 +1,6 @@
 package org.vincentyeh.http_util.net.client.concrete.downloader;
 
-import org.vincentyeh.http_util.net.client.framework.connection.header.Headers;
+import org.vincentyeh.http_util.net.client.framework.header.RequestHeaders;
 import org.vincentyeh.http_util.net.client.framework.downloader.URLDownloader;
 import org.vincentyeh.http_util.net.client.framework.downloader.listener.URLDownloaderListener;
 
@@ -18,7 +18,7 @@ public class FileDownloader extends URLDownloader<File> {
     private BigDecimal downloadBytes = new BigDecimal(0);
     private final File target;
 
-    public FileDownloader(URL url, File target, int timeoutMillis, Headers headers) {
+    public FileDownloader(URL url, File target, int timeoutMillis, RequestHeaders headers) {
         super(url, timeoutMillis,headers);
         this.target = target;
     }
