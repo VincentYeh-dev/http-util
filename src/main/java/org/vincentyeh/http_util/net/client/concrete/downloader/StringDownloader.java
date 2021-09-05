@@ -48,10 +48,10 @@ public class StringDownloader extends URLDownloader<String> {
         return builder.toString();
     }
 
-    @Override
-    public BigDecimal getDownloadedBytes() {
-        return downloadBytes;
-    }
+//    @Override
+//    public BigDecimal getDownloadedBytes() {
+//        return downloadBytes;
+//    }
 
     @Override
     protected void resetSubclass() {

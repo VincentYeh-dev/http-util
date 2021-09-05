@@ -56,11 +56,6 @@ public class FileDownloader extends URLDownloader<File> {
     }
 
     @Override
-    public BigDecimal getDownloadedBytes() {
-        return downloadBytes;
-    }
-
-    @Override
     protected void resetSubclass() {
         downloadBytes = new BigDecimal(0);
     }

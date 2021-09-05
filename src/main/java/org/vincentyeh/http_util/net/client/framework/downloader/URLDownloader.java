@@ -20,8 +20,6 @@ public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
 
     protected abstract RESULT getResult();
 
-    public abstract BigDecimal getDownloadedBytes();
-
     protected abstract void resetSubclass();
 
     private void reset() {
