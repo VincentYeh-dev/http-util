@@ -15,6 +15,8 @@ public abstract class HttpInputStreamAdaptor extends InputStream {
 
     public abstract long getContentLength();
 
+    public abstract void open() throws Exception;
+
     public abstract void close();
 
     public abstract InputStream getInputStream() throws IOException;

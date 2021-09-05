@@ -39,11 +39,8 @@ public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
 
         if (listener != null)
             listener.start(this);
-//        Response response = httpUtil.post(url, headers, timeoutMillis, "aaaffffff".getBytes(StandardCharsets.UTF_8), null);
 
-//        System.out.println("response code:" + response.getCode());
-//        System.out.println("header:");
-//        response.getHeader().forEach((key, value) -> System.out.printf("\t- %s:%s\n", key, value));
+        adaptor.open();
 
         totalBytes = new BigDecimal(adaptor.getContentLength());
 
