@@ -2,7 +2,6 @@ package org.vincentyeh.http_util.example;
 
 import org.vincentyeh.http_util.net.client.concrete.downloader.adaptor.GetInputStreamAdaptor;
 import org.vincentyeh.http_util.net.client.concrete.downloader.StringDownloader;
-import org.vincentyeh.http_util.net.client.concrete.downloader.adaptor.PostInputStreamAdaptor;
 import org.vincentyeh.http_util.net.client.concrete.utils.LocalProxyHttpClientUtil;
 import org.vincentyeh.http_util.net.client.framework.connection.data.Cookies;
 import org.vincentyeh.http_util.net.client.framework.connection.data.RequestHeaders;
@@ -38,7 +37,7 @@ public class StringDownloadExample {
 //        String text="Hello";
 //        HttpInputStreamAdaptor adaptor = new PostInputStreamAdaptor(url, headers, 2000, text.getBytes(StandardCharsets.UTF_8),null);
 
-        URLDownloader<String> downloader = new StringDownloader(StandardCharsets.UTF_8, adaptor);
+        URLDownloader<String> downloader = new StringDownloader(adaptor, StandardCharsets.UTF_8);
         downloader.setListener(listener);
         System.out.println(downloader.get());
     }

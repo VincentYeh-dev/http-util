@@ -22,7 +22,7 @@ public class StringDownloader extends URLDownloader<String> {
 
     private final StringBuilder builder = new StringBuilder();
 
-    public StringDownloader(Charset charset, HttpInputStreamAdaptor adaptor) {
+    public StringDownloader(HttpInputStreamAdaptor adaptor, Charset charset) {
         super(adaptor);
         this.charset = charset;
     }

@@ -17,7 +17,7 @@ public class FileDownloader extends URLDownloader<File> {
     private BigDecimal downloadBytes = new BigDecimal(0);
     private final File target;
 
-    public FileDownloader(File target, HttpInputStreamAdaptor adaptor) {
+    public FileDownloader(HttpInputStreamAdaptor adaptor, File target) {
         super(adaptor);
         this.target = target;
     }

@@ -13,8 +13,8 @@ public class BytesDownloader extends URLDownloader<List<Byte>> {
     private final List<Byte> bytes = new LinkedList<>();
     private BigDecimal downloadBytes = new BigDecimal(0);
 
-    public BytesDownloader( HttpInputStreamAdaptor adaptor) {
-        super( adaptor);
+    public BytesDownloader(HttpInputStreamAdaptor adaptor) {
+        super(adaptor);
     }
 
     @Override

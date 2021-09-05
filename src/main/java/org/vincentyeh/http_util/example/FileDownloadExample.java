@@ -26,7 +26,7 @@ public class FileDownloadExample {
 
         HttpInputStreamAdaptor adaptor = new GetInputStreamAdaptor(url, headers, 2000, null);
 
-        URLDownloader<File> downloader = new FileDownloader(new File("test.html"), adaptor);
+        URLDownloader<File> downloader = new FileDownloader(adaptor, new File("test.html"));
         System.out.println(downloader.get());
     }
 }
