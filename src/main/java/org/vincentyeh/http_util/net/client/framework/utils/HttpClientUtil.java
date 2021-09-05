@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface HttpClientUtil {
+
     Response get(URL url, Map<String, List<String>> headers, int timeoutMillisecond, Proxy proxy) throws Exception;
 
     Response post(URL url, Map<String, List<String>> headers, int timeoutMillisecond, byte[] body, Proxy proxy) throws Exception;

@@ -1,10 +1,7 @@
 package org.vincentyeh.http_util.net.client.framework.downloader;
 
-import org.vincentyeh.http_util.net.client.framework.connection.Response;
-import org.vincentyeh.http_util.net.client.framework.connection.data.RequestHeaders;
-import org.vincentyeh.http_util.net.client.framework.downloader.exception.NoSpecifyNetUtil;
+import org.vincentyeh.http_util.net.client.framework.downloader.adaptor.HttpInputStreamAdaptor;
 import org.vincentyeh.http_util.net.client.framework.downloader.listener.URLDownloaderListener;
-import org.vincentyeh.http_util.net.client.framework.utils.HttpClientUtil;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -14,17 +11,8 @@ import java.net.URL;
 import java.util.concurrent.Callable;
 
 public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
-    private static HttpClientUtil httpUtil;
-
-
-    public static void warpHttpClientUtil(HttpClientUtil util) {
-        httpUtil = util;
-    }
-
     private URLDownloaderListener listener;
-    protected final URL url;
-    private final RequestHeaders headers;
-    private final int timeoutMillis;
+    private final HttpInputStreamAdaptor adaptor;
     private BigDecimal totalBytes = new BigDecimal(0);
 
 
@@ -41,33 +29,26 @@ public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
         resetSubclass();
     }
 
-    public URLDownloader(URL url, int timeoutMillis, RequestHeaders headers) {
-        this.url = url;
-        this.timeoutMillis = timeoutMillis;
-        this.headers = headers;
+    public URLDownloader(HttpInputStreamAdaptor adaptor) {
+        this.adaptor = adaptor;
     }
 
     @Override
     public final RESULT call() throws Exception {
         reset();
 
-        if (httpUtil == null)
-            throw new NoSpecifyNetUtil("Specify util before starting.");
-
         if (listener != null)
             listener.start(this);
-
-        Response response = httpUtil.get(url, headers, timeoutMillis, null);
-//        Session session = httpUtil.post(url, headers, timeoutMillis, "aaaffffff".getBytes(StandardCharsets.UTF_8), null);
+//        Response response = httpUtil.post(url, headers, timeoutMillis, "aaaffffff".getBytes(StandardCharsets.UTF_8), null);
 
 //        System.out.println("response code:" + response.getCode());
 //        System.out.println("header:");
-        response.getHeader().forEach((key, value) -> System.out.printf("\t- %s:%s\n", key, value));
+//        response.getHeader().forEach((key, value) -> System.out.printf("\t- %s:%s\n", key, value));
 
-        totalBytes = new BigDecimal(response.getContentLength());
+        totalBytes = new BigDecimal(adaptor.getContentLength());
 
         try {
-            InputStream urlInputStream = response.getBodyInputStream();
+            InputStream urlInputStream = adaptor.getInputStream();
             handleInputStream(urlInputStream, listener);
             urlInputStream.close();
             return getResult();
@@ -80,7 +61,7 @@ public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
                 listener.onIoException(this, e);
             throw e;
         } finally {
-            response.close();
+            adaptor.close();
         }
     }
 
@@ -88,15 +69,15 @@ public abstract class URLDownloader<RESULT> implements Callable<RESULT> {
         return call();
     }
 
-    public BigDecimal getTotalBytes() {
+    public final BigDecimal getTotalBytes() {
         return totalBytes;
     }
 
-    public URL getUrl() {
-        return url;
+    public final URL getUrl() {
+        return adaptor.getUrl();
     }
 
-    public void setListener(URLDownloaderListener listener) {
+    public final void setListener(URLDownloaderListener listener) {
         this.listener = listener;
     }
 }
