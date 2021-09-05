@@ -1,13 +1,12 @@
 package org.vincentyeh.http_util.net.client.concrete.downloader;
 
 
-import org.vincentyeh.http_util.net.client.framework.connection.header.Headers;
+import org.vincentyeh.http_util.net.client.framework.downloader.adaptor.HttpInputStreamAdaptor;
 import org.vincentyeh.http_util.net.client.framework.downloader.URLDownloader;
 import org.vincentyeh.http_util.net.client.framework.downloader.listener.URLDownloaderListener;
 
 import java.io.*;
 import java.math.BigDecimal;
-import java.net.URL;
 import java.nio.charset.Charset;
 
 public class StringDownloader extends URLDownloader<String> {
@@ -23,8 +22,8 @@ public class StringDownloader extends URLDownloader<String> {
 
     private final StringBuilder builder = new StringBuilder();
 
-    public StringDownloader(URL url, Charset charset, int timeoutMillis, Headers headers) {
-        super(url, timeoutMillis, headers);
+    public StringDownloader(HttpInputStreamAdaptor adaptor, Charset charset) {
+        super(adaptor);
         this.charset = charset;
     }
 

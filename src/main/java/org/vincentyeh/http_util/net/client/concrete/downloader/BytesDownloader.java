@@ -1,12 +1,11 @@
 package org.vincentyeh.http_util.net.client.concrete.downloader;
 
-import org.vincentyeh.http_util.net.client.framework.connection.header.Headers;
+import org.vincentyeh.http_util.net.client.framework.downloader.adaptor.HttpInputStreamAdaptor;
 import org.vincentyeh.http_util.net.client.framework.downloader.URLDownloader;
 import org.vincentyeh.http_util.net.client.framework.downloader.listener.URLDownloaderListener;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,8 +13,8 @@ public class BytesDownloader extends URLDownloader<List<Byte>> {
     private final List<Byte> bytes = new LinkedList<>();
     private BigDecimal downloadBytes = new BigDecimal(0);
 
-    public BytesDownloader(URL url, int timeoutMillis, Headers headers) {
-        super(url, timeoutMillis, headers);
+    public BytesDownloader(HttpInputStreamAdaptor adaptor) {
+        super(adaptor);
     }
 
     @Override
