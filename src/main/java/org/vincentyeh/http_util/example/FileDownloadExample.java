@@ -5,7 +5,7 @@ import org.vincentyeh.http_util.net.client.concrete.downloader.adaptor.GetInputS
 import org.vincentyeh.http_util.net.client.concrete.utils.LocalProxyHttpClientUtil;
 import org.vincentyeh.http_util.net.client.framework.connection.data.RequestHeaders;
 import org.vincentyeh.http_util.net.client.framework.downloader.adaptor.HttpInputStreamAdaptor;
-import org.vincentyeh.http_util.net.client.framework.downloader.URLDownloader;
+import org.vincentyeh.http_util.net.client.framework.downloader.InputStreamDownloader;
 
 import java.io.File;
 import java.net.URL;
@@ -26,7 +26,7 @@ public class FileDownloadExample {
 
         HttpInputStreamAdaptor adaptor = new GetInputStreamAdaptor(url, headers, 2000, null);
 
-        URLDownloader<File> downloader = new FileDownloader(adaptor, new File("test.html"));
+        InputStreamDownloader<File,HttpInputStreamAdaptor> downloader = new FileDownloader<>(adaptor, new File("test.html"));
         System.out.println(downloader.get());
     }
 }

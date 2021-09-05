@@ -1,13 +1,14 @@
 package org.vincentyeh.http_util.net.client.concrete.downloader;
 
 import org.vincentyeh.http_util.net.client.framework.downloader.adaptor.HttpInputStreamAdaptor;
-import org.vincentyeh.http_util.net.client.framework.downloader.URLDownloader;
-import org.vincentyeh.http_util.net.client.framework.downloader.listener.URLDownloaderListener;
+import org.vincentyeh.http_util.net.client.framework.downloader.InputStreamDownloader;
+import org.vincentyeh.http_util.net.client.framework.downloader.adaptor.InputStreamAdaptor;
+import org.vincentyeh.http_util.net.client.framework.downloader.listener.DownloaderListener;
 
 import java.io.*;
 import java.math.BigDecimal;
 
-public class FileDownloader extends URLDownloader<File> {
+public class FileDownloader<ADAPTOR extends InputStreamAdaptor> extends InputStreamDownloader<File,ADAPTOR> {
     private static int bufferSize = 65536;
 
     public static void setBufferSize(int bufferSize) {
@@ -17,13 +18,13 @@ public class FileDownloader extends URLDownloader<File> {
     private BigDecimal downloadBytes = new BigDecimal(0);
     private final File target;
 
-    public FileDownloader(HttpInputStreamAdaptor adaptor, File target) {
+    public FileDownloader(ADAPTOR adaptor, File target) {
         super(adaptor);
         this.target = target;
     }
 
     @Override
-    protected void handleInputStream(InputStream inputStream, URLDownloaderListener listener) throws IOException {
+    protected void handleInputStream(InputStream inputStream, DownloaderListener<ADAPTOR> listener) throws IOException {
         OutputStream targetFileStream = new FileOutputStream(target);
         try {
             byte[] bytes = new byte[bufferSize];
@@ -33,7 +34,7 @@ public class FileDownloader extends URLDownloader<File> {
                 synchronized (this) {
                     downloadBytes = downloadBytes.add(new BigDecimal(len));
                     if (listener != null)
-                        listener.download(this, downloadBytes);
+                        listener.download(adaptor, downloadBytes);
                 }
             }
 
@@ -42,7 +43,7 @@ public class FileDownloader extends URLDownloader<File> {
             targetFileStream.close();
 
             if (listener != null)
-                listener.done(this, downloadBytes);
+                listener.done(adaptor, downloadBytes);
         }
     }
 

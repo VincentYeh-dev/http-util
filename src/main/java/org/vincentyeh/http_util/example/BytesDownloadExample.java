@@ -5,8 +5,8 @@ import org.vincentyeh.http_util.net.client.concrete.downloader.adaptor.GetInputS
 import org.vincentyeh.http_util.net.client.concrete.utils.LocalProxyHttpClientUtil;
 import org.vincentyeh.http_util.net.client.framework.connection.data.RequestHeaders;
 import org.vincentyeh.http_util.net.client.framework.downloader.adaptor.HttpInputStreamAdaptor;
-import org.vincentyeh.http_util.net.client.framework.downloader.URLDownloader;
-import org.vincentyeh.http_util.net.client.framework.downloader.listener.URLDownloaderListener;
+import org.vincentyeh.http_util.net.client.framework.downloader.InputStreamDownloader;
+import org.vincentyeh.http_util.net.client.framework.downloader.listener.DownloaderListener;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -29,35 +29,34 @@ public class BytesDownloadExample {
 
         HttpInputStreamAdaptor adaptor = new GetInputStreamAdaptor(url, headers, 1000, null);
 
-        URLDownloader<List<Byte>> downloader = new BytesDownloader(adaptor);
-        downloader.setListener(listener);
+        InputStreamDownloader<List<Byte>,HttpInputStreamAdaptor> downloader = new BytesDownloader<>(adaptor);
         System.out.println(downloader.get().stream().map(b -> (char) b.byteValue() + "").collect(Collectors.joining()));
     }
 
-    private static final URLDownloaderListener listener = new URLDownloaderListener() {
-        @Override
-        public void start(URLDownloader<?> downloader) {
-
-        }
-
-        @Override
-        public void download(URLDownloader<?> downloader, BigDecimal downloadedBytes) {
-            System.out.println(downloadedBytes.toString() + "/" + downloader.getTotalBytes());
-        }
-
-        @Override
-        public void done(URLDownloader<?> downloader, BigDecimal downloadedBytes) {
-
-        }
-
-        @Override
-        public void onTimeout(URLDownloader<?> downloader, Exception e) {
-
-        }
-
-        @Override
-        public void onIoException(URLDownloader<?> downloader, IOException e) {
-
-        }
-    };
+//    private static final DownloaderListener listener = new DownloaderListener() {
+//        @Override
+//        public void start(InputStreamDownloader<?> downloader) {
+//
+//        }
+//
+//        @Override
+//        public void download(InputStreamDownloader<?> downloader, BigDecimal downloadedBytes) {
+//            System.out.println(downloadedBytes.toString() + "/" + downloader.getTotalBytes());
+//        }
+//
+//        @Override
+//        public void done(InputStreamDownloader<?> downloader, BigDecimal downloadedBytes) {
+//
+//        }
+//
+//        @Override
+//        public void onTimeout(InputStreamDownloader<?> downloader, Exception e) {
+//
+//        }
+//
+//        @Override
+//        public void onIoException(InputStreamDownloader<?> downloader, IOException e) {
+//
+//        }
+//    };
 }
