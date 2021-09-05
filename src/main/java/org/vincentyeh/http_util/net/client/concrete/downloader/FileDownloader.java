@@ -1,6 +1,5 @@
 package org.vincentyeh.http_util.net.client.concrete.downloader;
 
-import org.vincentyeh.http_util.net.client.framework.downloader.adaptor.HttpInputStreamAdaptor;
 import org.vincentyeh.http_util.net.client.framework.downloader.InputStreamDownloader;
 import org.vincentyeh.http_util.net.client.framework.downloader.adaptor.InputStreamAdaptor;
 import org.vincentyeh.http_util.net.client.framework.downloader.listener.DownloaderListener;

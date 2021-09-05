@@ -1,9 +1,7 @@
 package org.vincentyeh.http_util.net.client.concrete.downloader.adaptor;
 
 import org.vincentyeh.http_util.net.client.framework.connection.Response;
-import org.vincentyeh.http_util.net.client.framework.downloader.adaptor.HttpInputStreamAdaptor;
 import org.vincentyeh.http_util.net.client.framework.downloader.exception.NoSpecifyNetUtil;
-import org.vincentyeh.http_util.net.client.framework.utils.HttpClientUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +10,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
-public class GetInputStreamAdaptor extends HttpInputStreamAdaptor {
+class GetInputStreamAdaptor extends HttpInputStreamAdaptor {
     private final Map<String, List<String>> headers;
     private final int timeoutMillis;
     private final Proxy proxy;
