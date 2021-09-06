@@ -6,12 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-public abstract class HttpInputStreamAdaptor extends InputStream {
-
-    protected static HttpClientUtil httpUtil;
-    public static void warpHttpClientUtil(HttpClientUtil util) {
-        httpUtil = util;
-    }
+public abstract class InputStreamAdaptor extends InputStream {
 
     public abstract long getContentLength();
 

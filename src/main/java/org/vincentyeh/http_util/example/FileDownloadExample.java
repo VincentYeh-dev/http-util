@@ -1,18 +1,16 @@
 package org.vincentyeh.http_util.example;
 
+import org.vincentyeh.http_util.net.client.concrete.downloader.DownloadUtil;
 import org.vincentyeh.http_util.net.client.concrete.downloader.FileDownloader;
-import org.vincentyeh.http_util.net.client.concrete.downloader.adaptor.GetInputStreamAdaptor;
 import org.vincentyeh.http_util.net.client.concrete.utils.LocalProxyHttpClientUtil;
 import org.vincentyeh.http_util.net.client.framework.connection.data.RequestHeaders;
-import org.vincentyeh.http_util.net.client.framework.downloader.adaptor.HttpInputStreamAdaptor;
-import org.vincentyeh.http_util.net.client.framework.downloader.URLDownloader;
 
 import java.io.File;
 import java.net.URL;
 
 public class FileDownloadExample {
     static {
-        HttpInputStreamAdaptor.warpHttpClientUtil(new LocalProxyHttpClientUtil());
+        DownloadUtil.warpHttpClientUtil(new LocalProxyHttpClientUtil());
     }
 
     public static void main(String[] args) throws Exception {
@@ -23,10 +21,8 @@ public class FileDownloadExample {
         headers.setConnection(RequestHeaders.CONNECTION_KEEP_ALIVE);
 
         URL url = new URL("https://example.org/");
-
-        HttpInputStreamAdaptor adaptor = new GetInputStreamAdaptor(url, headers, 2000, null);
-
-        URLDownloader<File> downloader = new FileDownloader(adaptor, new File("test.html"));
-        System.out.println(downloader.get());
+        File file = DownloadUtil.downloadFile(url, headers, 2000, null, null, new File("test.html"));
+        System.out.println(file);
     }
+
 }

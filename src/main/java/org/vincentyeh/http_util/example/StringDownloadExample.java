@@ -1,13 +1,11 @@
 package org.vincentyeh.http_util.example;
 
-import org.vincentyeh.http_util.net.client.concrete.downloader.adaptor.GetInputStreamAdaptor;
-import org.vincentyeh.http_util.net.client.concrete.downloader.StringDownloader;
+import org.vincentyeh.http_util.net.client.concrete.downloader.DownloadUtil;
 import org.vincentyeh.http_util.net.client.concrete.utils.LocalProxyHttpClientUtil;
 import org.vincentyeh.http_util.net.client.framework.connection.data.Cookies;
 import org.vincentyeh.http_util.net.client.framework.connection.data.RequestHeaders;
-import org.vincentyeh.http_util.net.client.framework.downloader.adaptor.HttpInputStreamAdaptor;
-import org.vincentyeh.http_util.net.client.framework.downloader.URLDownloader;
-import org.vincentyeh.http_util.net.client.framework.downloader.listener.URLDownloaderListener;
+import org.vincentyeh.http_util.net.client.concrete.downloader.adaptor.HttpInputStreamAdaptor;
+import org.vincentyeh.http_util.net.client.framework.downloader.listener.DownloaderListener;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -15,8 +13,9 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 public class StringDownloadExample {
+
     static {
-        HttpInputStreamAdaptor.warpHttpClientUtil(new LocalProxyHttpClientUtil());
+        DownloadUtil.warpHttpClientUtil(new LocalProxyHttpClientUtil());
     }
 
     public static void main(String[] args) throws Exception {
@@ -32,39 +31,33 @@ public class StringDownloadExample {
 
         URL url = new URL(args[0]);
 
-        HttpInputStreamAdaptor adaptor = new GetInputStreamAdaptor(url, headers, 2000, null);
+//        HttpInputStreamAdaptor adaptor = HttpInputStreamAdaptor.createGetInputStreamAdaptor(url, headers, 2000, null);
 
 //        String text="Hello";
-//        HttpInputStreamAdaptor adaptor = new PostInputStreamAdaptor(url, headers, 2000, text.getBytes(StandardCharsets.UTF_8),null);
+//        HttpInputStreamAdaptor adaptor = HttpInputStreamAdaptor.createPostInputStreamAdaptor(url, headers, 2000, text.getBytes(StandardCharsets.UTF_8),null);
 
-        URLDownloader<String> downloader = new StringDownloader(adaptor, StandardCharsets.UTF_8);
-        downloader.setListener(listener);
-        System.out.println(downloader.get());
+        String content = DownloadUtil.downloadString(url, headers, 2000, null, listener, StandardCharsets.UTF_8);
+        System.out.println(content);
     }
 
-    private static final URLDownloaderListener listener = new URLDownloaderListener() {
+    private final static DownloaderListener<HttpInputStreamAdaptor> listener = new DownloaderListener<HttpInputStreamAdaptor>() {
         @Override
-        public void start(URLDownloader<?> downloader) {
+        public void start(HttpInputStreamAdaptor adaptor) {
 
         }
 
         @Override
-        public void download(URLDownloader<?> downloader, BigDecimal downloadedBytes) {
-            System.out.println(downloadedBytes.toString() + "/" + downloader.getTotalBytes());
+        public void download(HttpInputStreamAdaptor adaptor, BigDecimal downloadedBytes) {
+            System.out.println(downloadedBytes.toString() + "/" + adaptor.getContentLength());
         }
 
         @Override
-        public void done(URLDownloader<?> downloader, BigDecimal downloadedBytes) {
-
-        }
-
-        @Override
-        public void onTimeout(URLDownloader<?> downloader, Exception e) {
+        public void done(HttpInputStreamAdaptor adaptor, BigDecimal downloadedBytes) {
 
         }
 
         @Override
-        public void onIoException(URLDownloader<?> downloader, IOException e) {
+        public void onIoException(HttpInputStreamAdaptor adaptor, IOException e) {
 
         }
     };
